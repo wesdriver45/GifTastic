@@ -1,27 +1,32 @@
 // api_key=dc6zaTOxFJmzC
 
-var sports = ["skydiving", "rock climbing", "mountain biking", "whitewater kayaking", "motorcross", "base jumping", "snowboarding", "paintball", "caving"];
+
 
       
- $(document).ready(function() {
+ 
 
-    renderButtons();
+  var topics = ["skydiving", "rock climbing", "mountain biking", "whitewater kayaking", "motorcross", "base jumping", "snowboarding", "paintball", "caving"];
+  
+  // $(document).ready(function() {
+
+  
+renderButtons();
 
 
 //on click for all buttons
-   $("button").on("click", function() {
+    $("button").on("click", function() {
       var xSport = $(this).attr("data-name");
 
       var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + xSport + "&api_key=dc6zaTOxFJmzC&limit=10";
         
         
-    //ajax call
-        $.ajax({
-        url: queryURL,
-        method: "GET"
-              })
+      //ajax call
+      $.ajax({
+      url: queryURL,
+      method: "GET"
+            })
 
-        .done(function(response) {
+      .done(function(response) {
         console.log(response);
         
         //store results
@@ -37,7 +42,12 @@ var sports = ["skydiving", "rock climbing", "mountain biking", "whitewater kayak
             //making an img
             var sportImage = $("<img>");
 
-            sportImage.attr("src", results[i].images.fixed_height_still.url);
+            sportImage.attr ({
+              "src": results[i].images.fixed_height_still.url,
+              "data-still": results[i].images.fixed_height_still.url,
+              "data-animate": results[i].images.fixed_height.url,
+              "data-state": "sitll",
+              });
 
             //append ratin and gifDiv to div
             gifDiv.append(p);
@@ -46,63 +56,73 @@ var sports = ["skydiving", "rock climbing", "mountain biking", "whitewater kayak
             $("#gifs-appear-here").prepend(gifDiv);
             }
            }
+
+          // //pause/animate gifs
+            $(".item").on("click", function() {
+              
+              var state = $(this).attr("data-state");
+                
+              if (state === "still") {
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-state", "animate");
+                } 
+                  else {
+                    $(this).attr("src", $(this).attr("data-still"));
+                    $(this).attr("data-state", "still");
+                }  
+            });
+
         });
+    });
+// });
 
-      //click to add movie to array from input
-      $("#add-sport").on("click", function(enent) {
-        event.preventDefault();
-
-        var sportButton = $("#sports-input").val().trim();
-
-        sports.push(sportButton);
-
-        renderButtons();
-      });
-    
     //render button function
-  function renderButtons() {
+      function renderButtons() {
 
         //empty button div
         $("#buttons-here").empty();
 
         // loop through the array of movies
-        for (var i = 0; i < sports.length; i++) {
+        for (var i = 0; i < topics.length; i++) {
 
           var newSport = $("<button>");
           
           newSport.addClass("sport");
           
-          newSport.attr("data-name", sports[i]);
+          newSport.attr("data-name", topics[i]);
           
-          newSport.text(sports[i]);
+          newSport.text(topics[i]);
           
           $("#buttons-here").append(newSport);
 
-          $("#sports-input").val("");
+          
           }
-       }
-     });
- });
+         }
+
+
+      // //click to add movie to array from input
+      $("#add-sport").on("click", function(enent) {
+        event.preventDefault();
+
+        var sportButton = $("#sports-input").val().trim();
+
+        topics.push(sportButton);
+
+        renderButtons();
+
+        $("#sports-input").val("");
+
+      });
+    
+
+     
 
 
 
 
 
- //pause/animate gifs
-   // $(".gif").on("click", function() {
-   //    // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
-   //    var state = $(this).attr("data-state");
-   //    // If the clicked image's state is still, update its src attribute to what its data-animate value is.
-   //    // Then, set the image's data-state to animate
-   //    // Else set src to the data-still value
-   //    if (state === "still") {
-   //      $(this).attr("src", $(this).attr("data-animate"));
-   //      $(this).attr("data-state", "animate");
-   //    } else {
-   //      $(this).attr("src", $(this).attr("data-still"));
-   //      $(this).attr("data-state", "still");
-   //    }
 
+ 
 
 
 
